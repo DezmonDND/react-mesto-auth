@@ -1,0 +1,11 @@
+.profile__buttons {
+    display: flex;
+    justify-content: space-between;
+    max-width: 336px;
+}
+
+@media screen and (max-width: 767px) {
+    .profile__buttons {
+        margin: 26px auto 7px;
+    }
+}

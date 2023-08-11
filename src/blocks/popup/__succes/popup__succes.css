@@ -1,0 +1,9 @@
+.popup__succes {
+    width: 430px;
+    height: 330px;
+    background-color: #FFFFFF;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+}

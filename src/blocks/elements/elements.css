@@ -1,0 +1,19 @@
+.elements {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, 282px);
+    gap: 20px 17px;
+    justify-content: center;
+}
+
+@media screen and (max-width: 1023px) {
+    .elements {
+        grid-template-columns: repeat(2, 282px);
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .elements {
+        grid-template-columns: 282px;
+    }
+}

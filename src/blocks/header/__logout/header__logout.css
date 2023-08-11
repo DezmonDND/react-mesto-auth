@@ -1,0 +1,15 @@
+.header__logout {
+    all: unset;
+    display: flex;
+    align-self: flex-start;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+    color: #FFFFFF;
+    padding-top: 6px;
+}
+
+.header__logout:hover {
+    opacity: .6;
+    transition: .5s;
+}
