@@ -1,39 +1,47 @@
 import { useEffect, useState } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import ProtectedRouteElement from "./ProtectedRoute";
+import { api } from "../utils/Api";
+import { getToken, setToken, removeToken } from "../utils/token";
+import * as auth from "../utils/Auth";
 import Footer from "./Footer";
 import Header from "./Header";
 import Main from "./Main";
-import ImagePopup from './ImagePopup';
-import { api } from "../utils/Api";
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
+import ImagePopup from './ImagePopup';
 import AddPlacePopup from "./AddPlacePopup";
 import DeleteCardPopup from "./DeleteCardPopup";
-import { Route, Routes, useNavigate } from "react-router-dom";
 import Register from "./Register";
 import Login from "./Login";
-import ProtectedRouteElement from "./ProtectedRoute";
 import InfoTooltip from "./InfoTooltip";
-import { getToken, setToken, removeToken } from "../utils/token";
-import * as auth from "../utils/Auth";
 import PageNotFound from "./PageNotFound";
 
 function App() {
+  // Стейты для попапов
   const [isEditProfilePopupOpen, setisEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setisAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
   const [isImagePopupOpen, setImagePopupOpen] = useState(false);
   const [isDeleteCardPopupOpen, setDeleteCardPopupOpen] = useState(false);
-  const [selectedCard, setSelectedCard] = useState({});
-  const [currentUser, setCurrentUser] = useState({});
-  const [cards, setCards] = useState([]);
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [token, setTokenState] = useState(getToken());
-  const [userEmail, setUserEmail] = useState('');
   const [isInfoTooltipPopupOpen, setInfoTooltipPopupOpen] = useState(false);
+  // Выбранная карточка
+  const [selectedCard, setSelectedCard] = useState({});
+  // Массив карточек с сервера
+  const [cards, setCards] = useState([]);
+  // Данные пользователя
+  const [currentUser, setCurrentUser] = useState({});
+  const [userEmail, setUserEmail] = useState('');
+  const [token, setTokenState] = useState(getToken());
+  const [loggedIn, setLoggedIn] = useState(false);
   const [isTooltipSuccess, setTooltipSuccess] = useState(false);
+  // Стейт лоадера
   const [isLoading, setLoading] = useState(false);
 
+  const navigate = useNavigate();
+
+  // Получение данных с сервера и отрисовка
   useEffect(() => {
     Promise.all([api.getUserInfo(), api.getInitialCards()])
       .then(([userData, cardData]) => {
@@ -43,6 +51,7 @@ function App() {
       .catch((e) => console.log(`Error! ${e}`));
   }, [loggedIn]);
 
+  // Закрытие всех попапов
   const closeAllPopups = () => {
     setisEditProfilePopupOpen(false)
     setisAddPlacePopupOpen(false)
@@ -52,11 +61,19 @@ function App() {
     setInfoTooltipPopupOpen(false)
   }
 
+  // Открыть ImagePopup на selectedCard
   function handleCardClick(card) {
     setImagePopupOpen(true)
     setSelectedCard(card)
   }
 
+  // Открыть DeletePopup на selectedCard
+  function handleTrashButtonClick(card) {
+    setSelectedCard(card)
+    setDeleteCardPopupOpen(true)
+  }
+
+  // Поставить лайк
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
     const isLiked = card.likes.some(i => i._id === currentUser._id);
@@ -77,14 +94,21 @@ function App() {
     }
   }
 
+  // Удалить карточку
   function handleCardDelete(card) {
+    setLoading(true)
     api.deleteCard(card._id)
       .then(() => {
         setCards((state) => state.filter((c) => c._id !== card._id))
+        closeAllPopups()
       })
-      .catch((e) => console.log(`Error! ${e}`));
+      .catch((e) => console.log(`Error! ${e}`))
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
+  // Обновить данные пользователя
   function handleUpdateUser(inputValues) {
     setLoading(true)
     api.setUserInfo(inputValues)
@@ -98,6 +122,7 @@ function App() {
       })
   }
 
+  // Обновить аватар
   function handleUpdateAvatar(inputValues) {
     setLoading(true)
     api.updateAvatar({ avatarLink: inputValues.avatar })
@@ -111,6 +136,7 @@ function App() {
       })
   }
 
+  // Добавить карточку
   function handleAddPlaceSubmit(inputValues) {
     setLoading(true)
     api.sentNewCard({ profileName: inputValues.name, profileAbout: inputValues.link })
@@ -124,15 +150,14 @@ function App() {
       })
   }
 
+  // Авторизация
   function handleLogin(userData) {
     setTokenState(userData.jwt)
     setToken(userData.token)
     setLoggedIn(true);
   }
 
-  const navigate = useNavigate();
-
-  function tokenCheck() {
+    function tokenCheck() {
     if (!token) {
       setLoggedIn(false);
       return;
@@ -151,15 +176,18 @@ function App() {
       })
   }
 
+  // Проверить токен при обновлении страницы
   useEffect(() => {
     tokenCheck();
   }, []);
 
+  // Выход
   function handleLogout() {
     setLoggedIn(false);
     removeToken();
   }
 
+  // Отмена редиректа в адресной строке при обновлении страницы
   if (loggedIn === undefined) {
     return null;
   }
@@ -183,8 +211,7 @@ function App() {
                 onAddPlace={() => setisAddPlacePopupOpen(true)}
                 onOpenCard={handleCardClick}
                 onCardLike={handleCardLike}
-                onCardDelete={handleCardDelete}
-                onCardDeletePopup={() => setDeleteCardPopupOpen(true)}
+                onCardDelete={handleTrashButtonClick}
                 cards={cards}
                 loggedIn={loggedIn}
               />
@@ -212,9 +239,7 @@ function App() {
           <Route
             path="*"
             element={
-              <PageNotFound
-
-              />}
+              <PageNotFound />}
           />
         </Routes>
         {loggedIn && <Footer />}
@@ -239,12 +264,13 @@ function App() {
         <DeleteCardPopup
           isOpen={isDeleteCardPopupOpen}
           onClose={closeAllPopups}
-          onSubmit={handleCardDelete}
+          onDelete={handleCardDelete}
           buttonName={isLoading ? 'Удаление...' : 'Да'}
+          selectedCard={selectedCard}
         />
         <ImagePopup
           name='image'
-          card={selectedCard}
+          selectedCard={selectedCard}
           isOpen={isImagePopupOpen}
           onClose={closeAllPopups}
         />

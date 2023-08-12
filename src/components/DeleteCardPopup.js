@@ -1,10 +1,11 @@
 import PopupWithForm from "./PopupWithForm";
 
 function DeleteCardPopup(props) {
-    const { isOpen, onClose, buttonName } = props;
+    const { isOpen, onClose, buttonName, onDelete, selectedCard } = props;
 
-    function handleDeleteClick(e) {
+    function handleSubmit(e) {
         e.preventDefault();
+        onDelete(selectedCard);
     }
 
     return (
@@ -14,7 +15,7 @@ function DeleteCardPopup(props) {
             onClose={onClose}
             isOpen={isOpen}
             buttonName={buttonName}
-            onSubmit={handleDeleteClick}
+            onSubmit={handleSubmit}
         />
     )
 }

@@ -1,5 +1,5 @@
 function ImagePopup(props) {
-    const { name, card, isOpen, onClose } = props;
+    const { name, selectedCard, isOpen, onClose } = props;
 
     return (
         < div
@@ -13,10 +13,10 @@ function ImagePopup(props) {
                 <button className="popup__close-btn" type="button" onClick={onClose}></button>
                 <div className="popup__image-content">
                     <img className="popup__picture"
-                        src={card.link}
-                        alt={card.name}
+                        src={selectedCard.link}
+                        alt={selectedCard.name}
                     />
-                    <figcaption className="popup__image-description">{card.name}</figcaption>
+                    <figcaption className="popup__image-description">{selectedCard.name}</figcaption>
                 </div>
             </div>
         </div >
