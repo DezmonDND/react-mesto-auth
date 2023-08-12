@@ -2,9 +2,8 @@ import icon_ok from '../images/union.svg'
 import icon_cancel from '../images/union_cancel.svg'
 
 function InfoTooltip(props) {
-    const { isOpen, onClose, isRegister } = props;
-    const message = isRegister ? 'Вы успешно зарегистрировались!' : 'Что-то пошло не так! Попробуйте ещё раз.';
-    const icon = isRegister ? icon_ok : icon_cancel;
+    const { isOpen, onClose, isTooltipSuccess, message } = props;
+    const icon = isTooltipSuccess ? icon_ok : icon_cancel;
 
     return (
         <div className={`popup ${isOpen ? 'popup_opened' : ''} `}
@@ -12,8 +11,8 @@ function InfoTooltip(props) {
                 if (e.target.classList.contains('popup_opened')) {
                     onClose()
                 }
-            }} 
-            >
+            }}
+        >
             <div className="popup__container popup__succes">
                 <button
                     type="button"

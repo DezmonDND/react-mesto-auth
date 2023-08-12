@@ -1,0 +1,12 @@
+.page-404__link {
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 22px;
+    text-decoration: none;
+    color: #2fd2e7;
+}
+
+.page-404__link:hover {
+    opacity: .6;
+    transition: .5s;
+}

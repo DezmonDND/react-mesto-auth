@@ -3,7 +3,7 @@ import Card from "./Card";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 function Main(props) {
-    const { onEditAvatar, onEditProfile, onAddPlace, onOpenCard, cards, onCardLike, onCardDelete } = props;
+    const { onEditAvatar, onEditProfile, onAddPlace, onOpenCard, cards, onCardLike, onCardDelete, onCardDeletePopup } = props;
     const currentUser = useContext(CurrentUserContext);
 
     return (
@@ -33,6 +33,7 @@ function Main(props) {
                         onCardClick={onOpenCard}
                         onCardLike={onCardLike}
                         onCardDelete={onCardDelete}
+                        onCardDeletePopup={onCardDeletePopup}
                     />
                 ))}
             </section>

@@ -61,3 +61,8 @@
 @import url(./blocks/header/__email/header__email.css);
 @import url(./blocks/header/__userBlock/header__userBlock.css);
 @import url(./blocks/header/__logout/header__logout.css);
+@import url(./blocks/page-404/page-404.css);
+@import url(./blocks/page-404/__error/page-404__error.css);
+@import url(./blocks/page-404/__link/page-404__link.css);
+@import url(./blocks/page-404/__text/page-404__text.css);
+@import url(./blocks/page-404/__title/page-404__title.css);

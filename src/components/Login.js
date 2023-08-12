@@ -1,8 +1,8 @@
-import * as auth from "./Auth";
+import * as auth from "../utils/Auth";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Login = ({ handleLogin, setInfoTooltipPopupOpen, setRegister, setUserEmail }) => {
+const Login = ({ handleLogin, setInfoTooltipPopupOpen, setTooltipSuccess, setUserEmail }) => {
     const [formValue, setFormValue] = useState({
         email: '',
         password: ''
@@ -25,7 +25,7 @@ const Login = ({ handleLogin, setInfoTooltipPopupOpen, setRegister, setUserEmail
 
         if (!email || !password) {
             console.log('Необходимо заполнить все поля');
-            setRegister(false)
+            setTooltipSuccess(false)
             setInfoTooltipPopupOpen(true)
             return;
         }
@@ -45,7 +45,7 @@ const Login = ({ handleLogin, setInfoTooltipPopupOpen, setRegister, setUserEmail
                 else if (err.statusCose === 401) {
                     console.log('Пользователь с email не найден');
                 }
-                setRegister(false)
+                setTooltipSuccess(false)
                 setInfoTooltipPopupOpen(true)
             });
     }
@@ -65,6 +65,7 @@ const Login = ({ handleLogin, setInfoTooltipPopupOpen, setRegister, setUserEmail
                         type="email"
                         name="email"
                         placeholder="Email"
+                        required
                     ></input>
                     <input
                         onChange={handleChange}
@@ -73,6 +74,7 @@ const Login = ({ handleLogin, setInfoTooltipPopupOpen, setRegister, setUserEmail
                         type="password"
                         name="password"
                         placeholder="Пароль"
+                        required
                     ></input>
                     <button className="login__button">Войти</button>
                 </form>

@@ -15,7 +15,8 @@ import Login from "./Login";
 import ProtectedRouteElement from "./ProtectedRoute";
 import InfoTooltip from "./InfoTooltip";
 import { getToken, setToken, removeToken } from "../utils/token";
-import * as auth from "./Auth";
+import * as auth from "../utils/Auth";
+import PageNotFound from "./PageNotFound";
 
 function App() {
   const [isEditProfilePopupOpen, setisEditProfilePopupOpen] = useState(false);
@@ -26,11 +27,11 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
-  const [loggedIn, setLoggedIn] = useState(undefined);
+  const [loggedIn, setLoggedIn] = useState(false);
   const [token, setTokenState] = useState(getToken());
   const [userEmail, setUserEmail] = useState('');
   const [isInfoTooltipPopupOpen, setInfoTooltipPopupOpen] = useState(false);
-  const [isRegister, setRegister] = useState('');
+  const [isTooltipSuccess, setTooltipSuccess] = useState(false);
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -40,7 +41,7 @@ function App() {
         setCards(cardData);
       })
       .catch((e) => console.log(`Error! ${e}`));
-  }, []);
+  }, [loggedIn]);
 
   const closeAllPopups = () => {
     setisEditProfilePopupOpen(false)
@@ -183,6 +184,7 @@ function App() {
                 onOpenCard={handleCardClick}
                 onCardLike={handleCardLike}
                 onCardDelete={handleCardDelete}
+                onCardDeletePopup={() => setDeleteCardPopupOpen(true)}
                 cards={cards}
                 loggedIn={loggedIn}
               />
@@ -192,7 +194,7 @@ function App() {
             path="/sign-up"
             element={
               <Register
-                setRegister={setRegister}
+                setTooltipSuccess={setTooltipSuccess}
                 setInfoTooltipPopupOpen={setInfoTooltipPopupOpen}
               />
             }
@@ -202,9 +204,16 @@ function App() {
             element={
               <Login
                 handleLogin={handleLogin}
-                setRegister={setRegister}
+                setTooltipSuccess={setTooltipSuccess}
                 setInfoTooltipPopupOpen={setInfoTooltipPopupOpen}
                 setUserEmail={setUserEmail}
+              />}
+          />
+          <Route
+            path="*"
+            element={
+              <PageNotFound
+
               />}
           />
         </Routes>
@@ -230,7 +239,8 @@ function App() {
         <DeleteCardPopup
           isOpen={isDeleteCardPopupOpen}
           onClose={closeAllPopups}
-          buttonName={isLoading ? 'Удаление...' : 'Удалить'}
+          onSubmit={handleCardDelete}
+          buttonName={isLoading ? 'Удаление...' : 'Да'}
         />
         <ImagePopup
           name='image'
@@ -241,7 +251,8 @@ function App() {
         <InfoTooltip
           isOpen={isInfoTooltipPopupOpen}
           onClose={closeAllPopups}
-          isRegister={isRegister}
+          isTooltipSuccess={isTooltipSuccess}
+          message={isTooltipSuccess ? 'Вы успешно зарегистрировались!' : 'Что-то пошло не так! Попробуйте ещё раз.'}
         />
       </>
     </CurrentUserContext.Provider>
