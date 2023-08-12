@@ -23,15 +23,14 @@ function App() {
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
   const [isImagePopupOpen, setImagePopupOpen] = useState(false);
   const [isDeleteCardPopupOpen, setDeleteCardPopupOpen] = useState(false);
-  const [isInfoTooltipPopupOpen, setInfoTooltipPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(undefined);
   const [token, setTokenState] = useState(getToken());
-  const [userEmail, setUserEmail] = useState();
-  const [isRegister, setRegister] = useState();
-
+  const [userEmail, setUserEmail] = useState('');
+  const [isInfoTooltipPopupOpen, setInfoTooltipPopupOpen] = useState(false);
+  const [isRegister, setRegister] = useState('');
 
   useEffect(() => {
     Promise.all([api.getUserInfo(), api.getInitialCards()])
@@ -54,10 +53,6 @@ function App() {
   function handleCardClick(card) {
     setImagePopupOpen(true)
     setSelectedCard(card)
-  }
-
-  const openInfoTooltipPopup = () => {
-    setInfoTooltipPopupOpen(true);
   }
 
   function handleCardLike(card) {
@@ -125,6 +120,7 @@ function App() {
 
   function tokenCheck() {
     if (!token) {
+      setLoggedIn(false);
       return;
     }
     auth.getContent(token).then((data) => {
@@ -132,11 +128,12 @@ function App() {
         setLoggedIn(true);
         setUserEmail(data.data.email)
         navigate('/');
+      } else {
+        setLoggedIn(false);
       }
     })
       .catch((err) => {
         console.log(err);
-        openInfoTooltipPopup(false)
       })
   }
 
@@ -147,6 +144,10 @@ function App() {
   function handleLogout() {
     setLoggedIn(false);
     removeToken();
+  }
+
+  if (loggedIn === undefined) {
+    return null;
   }
 
   return (
@@ -178,7 +179,8 @@ function App() {
             path="/sign-up"
             element={
               <Register
-                openInfoTooltipPopup={openInfoTooltipPopup}
+                setRegister={setRegister}
+                setInfoTooltipPopupOpen={setInfoTooltipPopupOpen}
               />
             }
           />
@@ -187,11 +189,13 @@ function App() {
             element={
               <Login
                 handleLogin={handleLogin}
-                openInfoTooltipPopup={openInfoTooltipPopup}
+                setRegister={setRegister}
+                setInfoTooltipPopupOpen={setInfoTooltipPopupOpen}
+                setUserEmail={setUserEmail}
               />}
           />
         </Routes>
-        <Footer />
+        {loggedIn && <Footer />}
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}

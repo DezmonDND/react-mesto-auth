@@ -31,3 +31,9 @@
     background-position: center;
     cursor: pointer;
 }
+
+@media screen and (max-width: 767px) {
+    .profile__avatar-button {
+        margin: auto;
+    }
+}

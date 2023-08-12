@@ -2,7 +2,7 @@ import * as auth from "./Auth";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Login = ( {handleLogin, openInfoTooltipPopup} ) => {
+const Login = ({ handleLogin, setInfoTooltipPopupOpen, setRegister, setUserEmail }) => {
     const [formValue, setFormValue] = useState({
         email: '',
         password: ''
@@ -25,24 +25,28 @@ const Login = ( {handleLogin, openInfoTooltipPopup} ) => {
 
         if (!email || !password) {
             console.log('Необходимо заполнить все поля');
-            openInfoTooltipPopup(false)
+            setRegister(false)
+            setInfoTooltipPopupOpen(true)
             return;
         }
 
         auth.autorize(email, password)
             .then((res) => {
-                if (res.statusCose === 400 || res.statusCose === 401) {
-                    console.log('Что-то пошло не так!');
-                    openInfoTooltipPopup(false)
-                }
                 if (res && res.token) {
                     handleLogin(res);
+                    setUserEmail(email);
                     navigate('/');
                 }
             })
             .catch((err) => {
-                openInfoTooltipPopup(false);
-                console.log(err)
+                if (err.statusCose === 400) {
+                    console.log('Не передано одно из полей');
+                }
+                else if (err.statusCose === 401) {
+                    console.log('Пользователь с email не найден');
+                }
+                setRegister(false)
+                setInfoTooltipPopupOpen(true)
             });
     }
 

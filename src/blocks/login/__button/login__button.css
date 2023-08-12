@@ -4,5 +4,9 @@
     font-weight: 400;
     font-size: 18px;
     line-height: 22px;
+}
 
+.login__button:hover {
+    opacity: .6;
+    transition: .5s;
 }

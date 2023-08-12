@@ -11,6 +11,7 @@ function Header(props) {
             <div className='header__userBlock'>
                 {loggedIn && <p className='header__email'>{email}</p>}
                 {loggedIn && <button onClick={onSignOut} className='header__logout'>Выйти</button>}
+            </div>
                 <Routes>
                     <Route exact path=':sign-in'
                         element={
@@ -23,7 +24,6 @@ function Header(props) {
                         }
                     />
                 </Routes>
-            </div>
         </header>
     );
 }

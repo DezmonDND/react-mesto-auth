@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import * as auth from "./Auth";
+import { useNavigate } from "react-router-dom";
 
-const Register = ({ openInfoTooltipPopup, isRegister }) => {
+const Register = ({ setRegister, setInfoTooltipPopupOpen }) => {
 
+    const navigate = useNavigate();
     const [formValue, setFormValue] = useState({
         email: '',
         password: ''
@@ -18,27 +20,22 @@ const Register = ({ openInfoTooltipPopup, isRegister }) => {
         })
     }
 
-    const navigate = useNavigate();
-
     const handleSubmit = (e) => {
         e.preventDefault();
         const { email, password } = formValue;
         auth.register(email, password)
-            .then((res) => {
-                if (res.statusCode !== 400) {
-                    console.log(res);
-                    navigate('/sign-in')
-                    openInfoTooltipPopup(isRegister);
-                }
-                else {
-                    console.log('Что-то пошло не так');
-                    openInfoTooltipPopup(isRegister);
-                }
+            .then(() => {
+                setRegister(true)
+                setInfoTooltipPopupOpen(true)
+                navigate('/sign-in')
             })
             .catch((err) => {
-                openInfoTooltipPopup(isRegister);
-                console.log(err)
-            });
+                if (err.status === 400) {
+                    console.log('Некорректно заполнено одно из полей');
+                }
+                setRegister(false)
+                setInfoTooltipPopupOpen(true)
+            })
     }
 
     return (

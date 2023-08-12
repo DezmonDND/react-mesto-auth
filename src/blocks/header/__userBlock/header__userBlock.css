@@ -1,3 +1,10 @@
 .header__userBlock {
     display: flex;
 }
+
+@media screen and (max-width: 767px) {
+    .header__userBlock {
+        flex-direction: column;
+        border-bottom: 1px solid rgba(84, 84, 84, .7);
+    }
+}
