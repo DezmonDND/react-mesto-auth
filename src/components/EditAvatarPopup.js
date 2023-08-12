@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import PopupWithForm from "./PopupWithForm";
 
 function EditAvatarPopup(props) {
-    const { isOpen, onClose, onUpdateAvatar } = props;
+    const { isOpen, onClose, onUpdateAvatar, buttonName } = props;
     const avatarRef = useRef('');
 
     useEffect(() => {
@@ -24,6 +24,7 @@ function EditAvatarPopup(props) {
             isOpen={isOpen}
             onClose={onClose}
             onSubmit={handleSubmit}
+            buttonName={buttonName}
             children={
                 <>
                     <input

@@ -31,6 +31,7 @@ function App() {
   const [userEmail, setUserEmail] = useState('');
   const [isInfoTooltipPopupOpen, setInfoTooltipPopupOpen] = useState(false);
   const [isRegister, setRegister] = useState('');
+  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
     Promise.all([api.getUserInfo(), api.getInitialCards()])
@@ -84,30 +85,42 @@ function App() {
   }
 
   function handleUpdateUser(inputValues) {
+    setLoading(true)
     api.setUserInfo(inputValues)
       .then((newUser) => {
         setCurrentUser(newUser);
         closeAllPopups();
       })
-      .catch((e) => console.log(`Error! ${e}`));
+      .catch((e) => console.log(`Error! ${e}`))
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   function handleUpdateAvatar(inputValues) {
+    setLoading(true)
     api.updateAvatar({ avatarLink: inputValues.avatar })
       .then((newAvatar) => {
         setCurrentUser(newAvatar)
         closeAllPopups();
       })
-      .catch((e) => console.log(`Error! ${e}`));
+      .catch((e) => console.log(`Error! ${e}`))
+      .finally(() => {
+        setLoading(false);
+      })
   }
 
   function handleAddPlaceSubmit(inputValues) {
+    setLoading(true)
     api.sentNewCard({ profileName: inputValues.name, profileAbout: inputValues.link })
       .then((newCard) => {
         setCards([newCard, ...cards]);
         closeAllPopups();
       })
-      .catch((e) => console.log(`Error! ${e}`));
+      .catch((e) => console.log(`Error! ${e}`))
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   function handleLogin(userData) {
@@ -200,20 +213,24 @@ function App() {
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}
           onUpdateUser={handleUpdateUser}
+          buttonName={isLoading ? 'Сохранение...' : 'Сохранить'}
         />
         <AddPlacePopup
           isOpen={isAddPlacePopupOpen}
           onClose={closeAllPopups}
           onAddPlace={handleAddPlaceSubmit}
+          buttonName={isLoading ? 'Сохранение...' : 'Создать'}
         />
         <EditAvatarPopup
           isOpen={isEditAvatarPopupOpen}
           onClose={closeAllPopups}
           onUpdateAvatar={handleUpdateAvatar}
+          buttonName={isLoading ? 'Сохранение...' : 'Сохранить'}
         />
         <DeleteCardPopup
           isOpen={isDeleteCardPopupOpen}
           onClose={closeAllPopups}
+          buttonName={isLoading ? 'Удаление...' : 'Удалить'}
         />
         <ImagePopup
           name='image'

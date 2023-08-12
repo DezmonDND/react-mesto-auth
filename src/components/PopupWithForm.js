@@ -1,5 +1,6 @@
 function PopupWithForm(props) {
-    const { name, title, children, isOpen, onClose, onSubmit } = props;
+    const { name, title, children, isOpen, onClose, onSubmit, buttonName } = props;
+    
 
     return (
         <div className={`popup popup-${name} ${isOpen ? 'popup_opened' : ''} `}
@@ -13,7 +14,7 @@ function PopupWithForm(props) {
                 <form onSubmit={onSubmit} className="popup__content popup__edit-form" name={`${name}Form`} method="post" noValidate>
                     <h2 className='popup__title'>{title}</h2>
                     {children}
-                    <button className="popup__save-btn" type="submit">Сохранить</button>
+                    <button className="popup__save-btn" type="submit">{buttonName}</button>
                 </form>
             </div>
         </div >

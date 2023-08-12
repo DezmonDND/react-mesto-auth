@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import PopupWithForm from "./PopupWithForm";
 
 function AddPlacePopup(props) {
-    const { isOpen, onClose, onAddPlace } = props;
+    const { isOpen, onClose, onAddPlace, buttonName } = props;
     const [name, setName] = useState('');
     const [link, setLink] = useState('');
 
@@ -35,6 +35,7 @@ function AddPlacePopup(props) {
             isOpen={isOpen}
             onClose={onClose}
             onSubmit={handleSubmit}
+            buttonName={buttonName}
             children={
                 <>
                     <input
