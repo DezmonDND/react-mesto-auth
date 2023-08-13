@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from '../images/header_logo.svg';
 import { Link, Route, Routes } from 'react-router-dom';
+import BurgerMenu from './BurgerMenu';
 
 function Header(props) {
     const { email, onSignOut, loggedIn } = props;
@@ -8,6 +9,7 @@ function Header(props) {
     return (
         <header className="header">
             <img src={logo} alt="Логотип шапка" className="header__logo"></img>
+            {loggedIn && <BurgerMenu />}
             <div className='header__userBlock'>
                 {loggedIn && <p className='header__email'>{email}</p>}
                 {loggedIn && <button onClick={onSignOut} className='header__logout'>Выйти</button>}

@@ -26,6 +26,7 @@ function App() {
   const [isImagePopupOpen, setImagePopupOpen] = useState(false);
   const [isDeleteCardPopupOpen, setDeleteCardPopupOpen] = useState(false);
   const [isInfoTooltipPopupOpen, setInfoTooltipPopupOpen] = useState(false);
+  const [isBurgerMenuOpen, setBurgerMenuOpen] = useState(false);
   // Выбранная карточка
   const [selectedCard, setSelectedCard] = useState({});
   // Массив карточек с сервера
@@ -59,6 +60,7 @@ function App() {
     setImagePopupOpen(false)
     setDeleteCardPopupOpen(false)
     setInfoTooltipPopupOpen(false)
+    setBurgerMenuOpen(false)
   }
 
   // Открыть ImagePopup на selectedCard
