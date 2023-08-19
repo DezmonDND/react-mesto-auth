@@ -35,7 +35,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [userEmail, setUserEmail] = useState('');
   const [token, setTokenState] = useState(getToken());
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(undefined); // Чтобы не редиректило при обновлении страницы
   const [isTooltipSuccess, setTooltipSuccess] = useState(false);
   // Стейт лоадера
   const [isLoading, setLoading] = useState(false);
@@ -44,13 +44,15 @@ function App() {
 
   // Получение данных с сервера и отрисовка
   useEffect(() => {
-    Promise.all([api.getUserInfo(), api.getInitialCards()])
-      .then(([userData, cardData]) => {
-        setCurrentUser(userData);
-        setCards(cardData);
-      })
-      .catch((e) => console.log(`Error! ${e}`));
-  }, [loggedIn]);
+    if (loggedIn) {
+      Promise.all([api.getUserInfo(), api.getInitialCards()])
+        .then(([userData, cardData]) => {
+          setCurrentUser(userData);
+          setCards(cardData);
+        })
+        .catch((e) => console.log(`Error! ${e}`));
+    }
+  }, [loggedIn])
 
   // Закрытие всех попапов
   const closeAllPopups = () => {
@@ -159,7 +161,7 @@ function App() {
     setLoggedIn(true);
   }
 
-    function tokenCheck() {
+  function tokenCheck() {
     if (!token) {
       setLoggedIn(false);
       return;
